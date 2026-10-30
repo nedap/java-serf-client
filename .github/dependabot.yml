@@ -1,0 +1,34 @@
+version: 2
+
+updates:
+  - package-ecosystem: "maven"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "07:00"
+      timezone: "Europe/Amsterdam"
+    groups:
+      patch-updates:
+        update-types: ["patch"]
+      minor-updates:
+        update-types: ["minor"]
+    ignore:
+      # Majors need code changes; security updates are not affected by this rule.
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "07:00"
+      timezone: "Europe/Amsterdam"
+    # Give a freshly published (potentially poisoned) tag time to be caught before we adopt it.
+    cooldown:
+      default-days: 4
+    groups:
+      github-actions-all:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
